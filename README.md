@@ -1,6 +1,13 @@
 # Biblionet Client class
 Client library for the web service of biblionet: https://biblionet.diadrasis.net/webservicetest/
 
+## How to install:
+You can install this class using composer, just run:
+```
+#composer require mrpc/biblionet-client
+```
+in the root of your project
+
 ## Example use:
 ```php
 $client = new \mrpc\biblionetClient\Client();
