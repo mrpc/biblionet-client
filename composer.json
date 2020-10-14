@@ -1,0 +1,24 @@
+{
+    "name": "mrpc/biblionet-client",
+    "description": "Client library for the web service of biblionet: https://biblionet.diadrasis.net/webservicetest/",
+    "keywords": ["biblionet"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yannis - Pastis Glaros",
+            "email": "mrpc@pramnoshosting.gr"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "mrpc\\biblionetClient\\": "src/biblionetClient/"
+        }
+
+    }
+}
