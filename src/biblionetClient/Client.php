@@ -96,6 +96,7 @@ class Client
      *                          και μια κλήση στη getPerson και θα δημιουργηθεί
      *                          ένα νέο property, το "details", με όλη την
      *                          πληροφορία του προσώπου
+     * @return object[] An array of subjects or null if no results
      */
     public function getTitleSubjects($titleId, $loadDetails = false)
     {
@@ -136,6 +137,7 @@ class Client
      *                          και μια κλήση στη getPerson και θα δημιουργηθεί
      *                          ένα νέο property, το "details", με όλη την
      *                          πληροφορία του προσώπου
+     * @return object[] An array of persons or null if no results
      */
     public function getContributors($titleId, $loadDetails = false)
     {
@@ -176,6 +178,7 @@ class Client
      *                          και μια κλήση στη getCompany και θα δημιουργηθεί
      *                          ένα νέο property, το "details", με όλη την
      *                          πληροφορία της εταιρείας
+     * @return object[] An array of companies or null if no results
      */
     public function getTitleCompanies($titleId, $loadDetails = false)
     {
@@ -376,6 +379,80 @@ class Client
         }
         return $returnData;
     }
+
+    /**
+     * Τραβάει διαδοχικά τα πρόσωπα που ανανεώθηκαν σε όλες τις ημερομηνίες
+     * από την $date ως σήμερα
+     * @return object[] An array of persons or null if no results
+     */
+    protected function getUpdatedPersonsUntilNow($date, $daysLimit = 30)
+    {
+        $allDates = new \DatePeriod(
+            new \DateTime($date),
+            new \DateInterval('P1D'),
+            new \DateTime(date('Y-m-d'))
+        );
+        $returnArray = array();
+        $cnt = 0;
+        foreach ($allDates as $currentDate) {
+            $cnt++;
+            if ($cnt > $daysLimit) {
+                break;
+            }
+            $tmpPersons = $this->getUpdatedPersons(
+                $currentDate->format('Y-m-d'), false
+            );
+            if (is_array($tmpPersons)) {
+                foreach ($tmpPersons as $person) {
+                    $returnArray[$person->PersonsID] = $person;
+                }
+            }
+        }
+       return array_values($returnArray);
+    }
+
+
+    /**
+     * Επιστρέφει όλα τα πρόσωπα που καταχωρήθηκαν 
+     * ή ενημερώθηκαν σε μια συγκεκριμένη ημερομηνία
+     * @param string|int $date Ημερομηνία σε μορφή ΕΕΕΕ-ΜΜ-ΗΗ ή Unix Timestamp
+     * @param bool $untilNow Αν γίνει true, η method επιστρέφει όλες τις 
+     *                       ημερομηνίες από τημ $date ως σήμερα.
+     *                       Για λόγους απόδοσης, έχει όριο στις 30 μέρες
+     * @return object[] An array of persons or null if no results
+     */
+    public function getUpdatedPersons($date, $untilNow = false)
+    {
+        if (is_numeric($date)) {
+            $date = date('Y-m-d', $date);
+        }
+        if ($untilNow === true) {
+            return $this->getUpdatedPersonsUntilNow($date);
+        }
+        try {
+            $data = $this->callAPI(
+                'get_person',
+                array(
+                    'lastupdate' => $date
+                )
+            );
+        } catch (\Exception $exc) {
+            $this->lastError = $exc->getMessage();
+            return null;
+        }
+        if (!is_array($data) || count($data) == 0) {
+            return null;
+        }
+        if ($data[0] == null) {
+            return null;
+        }
+        $returnData = array();
+        foreach ($data[0] as $title) {
+            $returnData[] = $this->fixPersonData($title);
+        }
+        return $returnData;
+    }
+
 
     /**
      * Αναζήτηση αναλυτικών πληροφοριών τίτλου βάσει ID
