@@ -31,6 +31,11 @@ class Client
      * @var bool
      */
     public $checkCover = true;
+    /**
+     * Last Error
+     * @var string
+     */
+    
 
     /**
      * Biblionet webservice client
@@ -55,15 +60,20 @@ class Client
      */
     public function getMonthTitles($month, $year, $page = 1, $perPage = 50)
     {
-        $data = $this->callAPI(
-            'get_month_titles',
-            array(
-                'month' => $month,
-                'year' => $year,
-                'titles_per_page' => $perPage,
-                'page' => $page
-            )
-        );
+        try {
+            $data = $this->callAPI(
+                'get_month_titles',
+                array(
+                    'month' => $month,
+                    'year' => $year,
+                    'titles_per_page' => $perPage,
+                    'page' => $page
+                )
+            );
+        } catch (\Exception $exc) {
+            $this->lastError = $exc->getMessage();
+            return null;
+        }
         if (!is_array($data) || count($data) == 0) {
             return null;
         }
@@ -84,7 +94,41 @@ class Client
      */
     public function getTitle($titleid)
     {
-        $data = $this->callAPI('get_title', array('title' => $titleid));
+        try {
+            $data = $this->callAPI('get_title', array('title' => $titleid));
+        } catch (\Exception $exc) {
+            $this->lastError = $exc->getMessage();
+            return null;
+        }
+        
+        if (!is_array($data) || count($data) == 0) {
+            return null;
+        }
+        if ($data[0] == null) {
+            return null;
+        }
+        return $this->fixTitlesData($data[0][0]);
+    }
+
+    /**
+     * Get details about a title
+     * @param string $isbn To isbn του ζητούμενου τίτλου. Οι παύλες αγνούνται
+     * @return object A book object or null on no result
+     */
+    public function getTitleByISBN($isbn)
+    {
+        echo $isbn . "\n";
+        try {
+            $data = $this->callAPI(
+                'get_title', 
+                array(
+                    'isbn' => trim($isbn)
+                )
+            );
+        } catch (\Exception $exc) {
+            $this->lastError = $exc->getMessage();
+            return null;
+        }
         if (!is_array($data) || count($data) == 0) {
             return null;
         }
@@ -121,7 +165,7 @@ class Client
      * @param string $endpoint
      * @param array $data
      * @param string $method
-     * @return type
+     * @return mixed
      */
     protected function callAPI($endpoint, $data = array())
     {
@@ -130,13 +174,19 @@ class Client
         $url = $this->apiUrl . $endpoint;
         $data['username'] = $this->username;
         $data['password'] = $this->password;
-
         curl_setopt($curl, CURLOPT_POST, 1);
         if ($data) {
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         }
 
         // OPTIONS:
+        curl_setopt(
+            $curl, CURLOPT_HTTPHEADER, 
+            array(
+                'Content-Type: multipart/form-data',
+                'Cache-Control: no-cache',
+            )
+        );
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         // EXECUTE:
@@ -157,8 +207,8 @@ class Client
 
     /**
      * Check if an external url exists or returns any kind of error
-     * @param <string> $url
-     * @param <int> $timeout
+     * @param string $url
+     * @param int $timeout
      * @return boolean
      */
     protected function urlExists($url, $timeout = 2)

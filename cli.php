@@ -12,6 +12,7 @@ php cli.php [command]
 
     help: Display this help
     getTitle [TitlesID]: Get information about a specific title
+    getTitleByISBN [isbn]: Get information about a specific title
     getMonthTitles [month] [year] [page] [perpage]: Get all titles published for a specific month
 
 <?php
@@ -50,6 +51,14 @@ switch ($params[1]) {
         }
         $client = new \mrpc\biblionetClient\Client();
         var_dump($client->getTitle($params[2]));
+        break;
+    case "getTitleByISBN";
+        if (!isset($params[2])) {
+            echo "Please specify a TitlesID\n";
+            break;
+        }
+        $client = new \mrpc\biblionetClient\Client();
+        var_dump($client->getTitleByISBN($params[2]));
         break;
     case "getMonthTitles";
         if (!isset($params[3])) {
