@@ -15,6 +15,13 @@ php cli.php [command]
     getTitleByISBN [isbn]: Get information about a specific title
     getMonthTitles [month] [year] [page] [perpage]: Get all titles published for a specific month
     getUpdatedTitles [date]: Επιστρέφει όλους τους τίτλους που καταχωρήθηκαν ή ενημερώθηκαν από συγκεκριμένη ημερομηνία και μετά
+    getContributors [titleId]: Αναζήτηση Συνεργατών Τίτλου
+    getTitleCompanies [titleId]: Αναζήτηση Εταιρειών Τίτλου
+    getTitleSubjects [titleId]: Αναζήτηση Θεμάτων Τίτλου
+    getPerson [personid]: Αναζήτηση Πληροφοριών Προσώπου
+    getCompany [companyid]: Αναζήτηση Πληροφοριών Εταιρείας
+    getSubject [subjectid]: Αναζήτηση Πληροφοριών Θέματος
+    getLanguage [languageid]: Αναζήτηση Πληροφοριών Γλώσσας
 
 <?php
     exit(0);
@@ -53,6 +60,38 @@ switch ($params[1]) {
         $client = new \mrpc\biblionetClient\Client();
         var_dump($client->getTitle($params[2]));
         break;
+    case "getPerson":
+        if (!isset($params[2])) {
+            echo "Please specify a PersonID\n";
+            break;
+        }
+        $client = new \mrpc\biblionetClient\Client();
+        var_dump($client->getPerson($params[2]));
+        break;
+    case "getCompany":
+        if (!isset($params[2])) {
+            echo "Please specify a CompanyID\n";
+            break;
+        }
+        $client = new \mrpc\biblionetClient\Client();
+        var_dump($client->getCompany($params[2]));
+        break;
+    case "getSubject":
+        if (!isset($params[2])) {
+            echo "Please specify a SubjectID\n";
+            break;
+        }
+        $client = new \mrpc\biblionetClient\Client();
+        var_dump($client->getSubject($params[2]));
+        break;
+    case "getLanguage":
+        if (!isset($params[2])) {
+            echo "Please specify a Language ID\n";
+            break;
+        }
+        $client = new \mrpc\biblionetClient\Client();
+        var_dump($client->getLanguage($params[2]));
+        break;
     case "getUpdatedTitles";
         if (!isset($params[2])) {
             echo "Please specify a date\n";
@@ -69,6 +108,30 @@ switch ($params[1]) {
         $client = new \mrpc\biblionetClient\Client();
         var_dump($client->getTitleByISBN($params[2]));
         break;
+    case "getTitleCompanies":
+        if (!isset($params[2])) {
+            echo "Please specify an title id\n";
+            break;
+        }
+        $client = new \mrpc\biblionetClient\Client();
+        var_dump($client->getTitleCompanies($params[2], true));
+        break;
+    case "getContributors":
+        if (!isset($params[2])) {
+            echo "Please specify an title id\n";
+            break;
+        }
+        $client = new \mrpc\biblionetClient\Client();
+        var_dump($client->getContributors($params[2], true));
+        break;
+    case "getTitleSubjects":
+            if (!isset($params[2])) {
+                echo "Please specify an title id\n";
+                break;
+            }
+            $client = new \mrpc\biblionetClient\Client();
+            var_dump($client->getTitleSubjects($params[2], true));
+            break;
     case "getMonthTitles";
         if (!isset($params[3])) {
             echo "Please specify month and year\n";
