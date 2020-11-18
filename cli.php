@@ -14,6 +14,7 @@ php cli.php [command]
     getTitle [TitlesID]: Get information about a specific title
     getTitleByISBN [isbn]: Get information about a specific title
     getMonthTitles [month] [year] [page] [perpage]: Get all titles published for a specific month
+    getUpdatedTitles [date]: Επιστρέφει όλους τους τίτλους που καταχωρήθηκαν ή ενημερώθηκαν από συγκεκριμένη ημερομηνία και μετά
 
 <?php
     exit(0);
@@ -52,9 +53,17 @@ switch ($params[1]) {
         $client = new \mrpc\biblionetClient\Client();
         var_dump($client->getTitle($params[2]));
         break;
+    case "getUpdatedTitles";
+        if (!isset($params[2])) {
+            echo "Please specify a date\n";
+            break;
+        }
+        $client = new \mrpc\biblionetClient\Client();
+        var_dump($client->getUpdatedTitles($params[2], true));
+        break;
     case "getTitleByISBN";
         if (!isset($params[2])) {
-            echo "Please specify a TitlesID\n";
+            echo "Please specify an ISBN\n";
             break;
         }
         $client = new \mrpc\biblionetClient\Client();

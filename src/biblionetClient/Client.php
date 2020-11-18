@@ -11,28 +11,29 @@ class Client
     protected $apiUrl
         = 'https://biblionet.diadrasis.net/wp-json/biblionetwebservice/';
     /**
-     * Client username
+     * το όνομα χρήστη του συνδρομητή στην ιστοσελίδα της βιβλιονετ
      * @var string
      */
     public $username = '';
     /**
-     * Client password
+     * ο κωδικός του χρήστη στην ιστοσελίδα της βιβλιονετ
      * @var string
      */
     public $password = '';
     /**
-     * Fix data after retrieval. For example, CoverImage will be converted to 
-     * a full URL 
+     * Ορίζει το αν θα γίνει διόρθωση των δεδομένων μετά την αρχική ανάκτηση
+     * Για παράδειγμα, το CoverImage θα γίνει absolute url αντί για relative
      * @var bool
      */
     public $fixData = true;
     /**
-     * Check if the cover exists after retrieval of title information
+     * Ορίζει το αν θα γίνει έλεγχος του ότι υπάρχει το CoverImage. Αυτό ισχύει
+     * μόνο αν η fixData είναι true
      * @var bool
      */
     public $checkCover = true;
     /**
-     * Last Error
+     * Το τελευταίο μήνυμα λάθους που έχει επιστρέψει το API
      * @var string
      */
     
@@ -40,8 +41,8 @@ class Client
     /**
      * Biblionet webservice client
      * @link https://biblionet.diadrasis.net/webservicetest/ Information
-     * @param string $username User name
-     * @param string $password Password
+     * @param string $username το όνομα χρήστη του συνδρομητή στην ιστοσελίδα της βιβλιονετ
+     * @param string $password ο κωδικός του χρήστη στην ιστοσελίδα της βιβλιονετ
      */
     public function __construct($username = 'testuser', $password = 'testpsw')
     {
@@ -88,7 +89,79 @@ class Client
     }
 
     /**
-     * Get details about a title
+     * Τραβάει διαδοχικά τους τίτλους που ανανεώθηκαν σε όλες τις ημερομηνίες
+     * από την $date ως σήμερα
+     * @return object[] An array of products or null if no results
+     */
+    protected function getUpdatedTitlesUntilNow($date, $daysLimit = 30)
+    {
+        $allDates = new \DatePeriod(
+            new \DateTime($date),
+            new \DateInterval('P1D'),
+            new \DateTime(date('Y-m-d'))
+        );
+        $returnArray = array();
+        $cnt = 0;
+        foreach ($allDates as $currentDate) {
+            $cnt++;
+            if ($cnt > $daysLimit) {
+                break;
+            }
+            $tmpTitles = $this->getUpdatedTitles(
+                $currentDate->format('Y-m-d'), false
+            );
+            if (is_array($tmpTitles)) {
+                foreach ($tmpTitles as $title) {
+                    $returnArray[$title->TitlesID] = $title;
+                }
+            }
+        }
+       return array_values($returnArray);
+    }
+
+    /**
+     * Επιστρέφει όλους τους τίτλους που καταχωρήθηκαν 
+     * ή ενημερώθηκαν σε μια συγκεκριμένη ημερομηνία
+     * @param string|int $date Ημερομηνία σε μορφή ΕΕΕΕ-ΜΜ-ΗΗ ή Unix Timestamp
+     * @param bool $untilNow Αν γίνει true, η method επιστρέφει όλες τις 
+     *                       ημερομηνίες από τημ $date ως σήμερα.
+     *                       Για λόγους απόδοσης, έχει όριο στις 30 μέρες
+     * @return object[] An array of products or null if no results
+     */
+    public function getUpdatedTitles($date, $untilNow = false)
+    {
+        if (is_numeric($date)) {
+            $date = date('Y-m-d', $date);
+        }
+        if ($untilNow === true) {
+            return $this->getUpdatedTitlesUntilNow($date);
+        }
+        try {
+            $data = $this->callAPI(
+                'get_title',
+                array(
+                    'lastupdate' => $date
+                )
+            );
+        } catch (\Exception $exc) {
+            $this->lastError = $exc->getMessage();
+            return null;
+        }
+        if (!is_array($data) || count($data) == 0) {
+            return null;
+        }
+        if ($data[0] == null) {
+            return null;
+        }
+        $returnData = array();
+        foreach ($data[0] as $title) {
+            $returnData[] = $this->fixTitlesData($title);
+        }
+        return $returnData;
+    }
+
+    /**
+     * Αναζήτηση αναλυτικών πληροφοριών τίτλου βάσει ID
      * @param int $titleid
      * @return object A book object or null on no result
      */
@@ -111,7 +184,7 @@ class Client
     }
 
     /**
-     * Get details about a title
+     * Αναζήτηση αναλυτικών πληροφοριών τίτλου βάσει ISBN
      * @param string $isbn To isbn του ζητούμενου τίτλου. Οι παύλες αγνούνται
      * @return object A book object or null on no result
      */
@@ -139,7 +212,7 @@ class Client
     }
 
     /**
-     * Fix title data
+     * Διορθώνει πληροφορίες του τίτλου
      */
     protected function fixTitlesData($titleObj)
     {
