@@ -20,6 +20,17 @@ class Client
      * @var string
      */
     public $password = '';
+    /**
+     * Fix data after retrieval. For example, CoverImage will be converted to 
+     * a full URL 
+     * @var bool
+     */
+    public $fixData = true;
+    /**
+     * Check if the cover exists after retrieval of title information
+     * @var bool
+     */
+    public $checkCover = true;
 
     /**
      * Biblionet webservice client
@@ -76,7 +87,28 @@ class Client
         if ($data[0] == null) {
             return null;
         }
-        return $data[0][0];
+        return $this->fixTitlesData($data[0][0]);
+    }
+
+    /**
+     * Fix title data
+     */
+    protected function fixTitlesData($titleObj)
+    {
+        if (!is_object($titleObj)) {
+            return $titleObj;
+        }
+        if (!$this->fixData) {
+            return $titleObj;
+        }
+        if (isset($titleObj->CoverImage) && $titleObj->CoverImage != '') {
+            $titleObj->CoverImage = 'https://biblionet.gr' 
+                . $titleObj->CoverImage;
+            if ($this->checkCover && !$this->urlExists($titleObj->CoverImage)) {
+                $titleObj->CoverImage = false;
+            }
+        }
+        return $titleObj;
     }
 
 
@@ -117,6 +149,27 @@ class Client
         throw new \Exception(
             json_decode($result)
         );
+    }
 
+    /**
+     * Check if an external url exists or returns any kind of error
+     * @param <string> $url
+     * @param <int> $timeout
+     * @return boolean
+     */
+    protected function urlExists($url, $timeout = 2)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_exec($ch);
+        if(curl_getinfo($ch, CURLINFO_HTTP_CODE) == 200)
+        {
+            curl_close($ch);
+            return true;
+        }
+        curl_close($ch);
+        return false;
     }
 }
