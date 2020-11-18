@@ -14,6 +14,9 @@ $client = new \mrpc\biblionetClient\Client();
 $book = $client->getTitle(250081);
 ```
 
+## Documentation:
+Check the "docs" directory
+
 ## CLI usage:
 There is a CLI file to do test queries to the api using shell. To test it, run:
 ```
