@@ -1,5 +1,5 @@
 # Biblionet Client class
-Client library for the web service of biblionet: https://biblionet.diadrasis.net/webservicetest/
+Client library for the web service of biblionet: https://biblionet.gr/webservice/
 
 ## How to install:
 You can install this class using composer, just run:
