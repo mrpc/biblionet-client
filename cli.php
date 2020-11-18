@@ -16,6 +16,7 @@ php cli.php [command]
     getMonthTitles [month] [year] [page] [perpage]: Get all titles published for a specific month
     getUpdatedTitles [date]: Επιστρέφει όλους τους τίτλους που καταχωρήθηκαν ή ενημερώθηκαν από συγκεκριμένη ημερομηνία και μετά
     getUpdatedPersons [date]: Επιστρέφει όλα τα πρόσωπα που καταχωρήθηκαν ή ενημερώθηκαν από συγκεκριμένη ημερομηνία και μετά
+    getUpdatedCompanies [date]: Επιστρέφει όλες τις εταιρείες που καταχωρήθηκαν ή ενημερώθηκαν από συγκεκριμένη ημερομηνία και μετά
     getContributors [titleId]: Αναζήτηση Συνεργατών Τίτλου
     getTitleCompanies [titleId]: Αναζήτηση Εταιρειών Τίτλου
     getTitleSubjects [titleId]: Αναζήτηση Θεμάτων Τίτλου
@@ -108,6 +109,14 @@ switch ($params[1]) {
         }
         $client = new \mrpc\biblionetClient\Client();
         var_dump($client->getUpdatedPersons($params[2], true));
+        break;
+    case "getUpdatedCompanies";
+        if (!isset($params[2])) {
+            echo "Please specify a date\n";
+            break;
+        }
+        $client = new \mrpc\biblionetClient\Client();
+        var_dump($client->getUpdatedCompanies($params[2], true));
         break;
     case "getTitleByISBN";
         if (!isset($params[2])) {

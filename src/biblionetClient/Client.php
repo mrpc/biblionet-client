@@ -453,6 +453,75 @@ class Client
         return $returnData;
     }
 
+    /**
+     * Τραβάει διαδοχικά τις εταιρείες που ανανεώθηκαν σε όλες τις ημερομηνίες
+     * από την $date ως σήμερα
+     * @return object[] An array of companies or null if no results
+     */
+    protected function getUpdatedCompaniesUntilNow($date, $daysLimit = 30)
+    {
+        $allDates = new \DatePeriod(
+            new \DateTime($date),
+            new \DateInterval('P1D'),
+            new \DateTime(date('Y-m-d'))
+        );
+        $returnArray = array();
+        $cnt = 0;
+        foreach ($allDates as $currentDate) {
+            $cnt++;
+            if ($cnt > $daysLimit) {
+                break;
+            }
+            $tmpCompanies = $this->getUpdatedCompanies(
+                $currentDate->format('Y-m-d'), false
+            );
+            if (is_array($tmpCompanies)) {
+                foreach ($tmpCompanies as $company) {
+                    $returnArray[$company->ComID] = $company;
+                }
+            }
+        }
+       return array_values($returnArray);
+    }
+
+
+    /**
+     * Επιστρέφει όλες τις εταιρείες που καταχωρήθηκαν 
+     * ή ενημερώθηκαν σε μια συγκεκριμένη ημερομηνία
+     * @param string|int $date Ημερομηνία σε μορφή ΕΕΕΕ-ΜΜ-ΗΗ ή Unix Timestamp
+     * @param bool $untilNow Αν γίνει true, η method επιστρέφει όλες τις 
+     *                       ημερομηνίες από τημ $date ως σήμερα.
+     *                       Για λόγους απόδοσης, έχει όριο στις 30 μέρες
+     * @return object[] An array of companies or null if no results
+     */
+    public function getUpdatedCompanies($date, $untilNow = false)
+    {
+        if (is_numeric($date)) {
+            $date = date('Y-m-d', $date);
+        }
+        if ($untilNow === true) {
+            return $this->getUpdatedCompaniesUntilNow($date);
+        }
+        try {
+            $data = $this->callAPI(
+                'get_company',
+                array(
+                    'lastupdate' => $date
+                )
+            );
+        } catch (\Exception $exc) {
+            $this->lastError = $exc->getMessage();
+            return null;
+        }
+        if (!is_array($data) || count($data) == 0) {
+            return null;
+        }
+        if ($data[0] == null) {
+            return null;
+        }
+        return $data[0];
+    }
+
 
     /**
      * Αναζήτηση αναλυτικών πληροφοριών τίτλου βάσει ID
