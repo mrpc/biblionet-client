@@ -70,7 +70,11 @@ class Client
         if ($data[0] == null) {
             return null;
         }
-        return $data[0];
+        $returnData = array();
+        foreach ($data[0] as $title) {
+            $returnData[] = $this->fixTitlesData($title);
+        }
+        return $returnData;
     }
 
     /**
