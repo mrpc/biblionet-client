@@ -553,7 +553,6 @@ class Client
      */
     public function getTitleByISBN($isbn)
     {
-        echo $isbn . "\n";
         try {
             $data = $this->callAPI(
                 'get_title', 
