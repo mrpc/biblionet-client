@@ -873,7 +873,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/biblionetClient/Client.php"><a href="files/src-biblionetclient-client.html"><abbr title="src/biblionetClient/Client.php">Client.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">531</span>
+    <span class="phpdocumentor-element-found-in__line">533</span>
 </aside>
 
         <p class="phpdocumentor-summary">Αναζήτηση αναλυτικών πληροφοριών τίτλου βάσει ID</p>
@@ -919,7 +919,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/biblionetClient/Client.php"><a href="files/src-biblionetclient-client.html"><abbr title="src/biblionetClient/Client.php">Client.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">554</span>
+    <span class="phpdocumentor-element-found-in__line">556</span>
 </aside>
 
         <p class="phpdocumentor-summary">Αναζήτηση αναλυτικών πληροφοριών τίτλου βάσει ISBN</p>
@@ -1084,7 +1084,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/biblionetClient/Client.php"><a href="files/src-biblionetclient-client.html"><abbr title="src/biblionetClient/Client.php">Client.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">497</span>
+    <span class="phpdocumentor-element-found-in__line">499</span>
 </aside>
 
         <p class="phpdocumentor-summary">Επιστρέφει όλες τις εταιρείες που καταχωρήθηκαν
@@ -1143,7 +1143,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/biblionetClient/Client.php"><a href="files/src-biblionetclient-client.html"><abbr title="src/biblionetClient/Client.php">Client.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">424</span>
+    <span class="phpdocumentor-element-found-in__line">426</span>
 </aside>
 
         <p class="phpdocumentor-summary">Επιστρέφει όλα τα πρόσωπα που καταχωρήθηκαν
@@ -1202,7 +1202,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/biblionetClient/Client.php"><a href="files/src-biblionetclient-client.html"><abbr title="src/biblionetClient/Client.php">Client.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">351</span>
+    <span class="phpdocumentor-element-found-in__line">353</span>
 </aside>
 
         <p class="phpdocumentor-summary">Επιστρέφει όλους τους τίτλους που καταχωρήθηκαν
@@ -1210,7 +1210,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                <span class="phpdocumentor-signature__name">getUpdatedTitles</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$date</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$untilNow</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, object&gt;</span></code>
+                <span class="phpdocumentor-signature__name">getUpdatedTitles</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$date</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$untilNow</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$daysLimit</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">30</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, object&gt;</span></code>
 
         <section class="phpdocumentor-description"></section>
 
@@ -1233,6 +1233,16 @@
                     <section class="phpdocumentor-description"><p>Αν γίνει true, η method επιστρέφει όλες τις
 ημερομηνίες από τημ $date ως σήμερα.
 Για λόγους απόδοσης, έχει όριο στις 30 μέρες</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$daysLimit</span>
+                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">30</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Αν θέλουμε να κάνουμε override το όριο των 30
+ημερών, χρησιμοποιούμε αυτή την παράμετρο</p>
 </section>
 
             </dd>
@@ -1261,7 +1271,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/biblionetClient/Client.php"><a href="files/src-biblionetclient-client.html"><abbr title="src/biblionetClient/Client.php">Client.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">627</span>
+    <span class="phpdocumentor-element-found-in__line">628</span>
 </aside>
 
         <p class="phpdocumentor-summary">Do the actual API call</p>
@@ -1314,7 +1324,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/biblionetClient/Client.php"><a href="files/src-biblionetclient-client.html"><abbr title="src/biblionetClient/Client.php">Client.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">601</span>
+    <span class="phpdocumentor-element-found-in__line">602</span>
 </aside>
 
         <p class="phpdocumentor-summary">Διορθώνει πληροφορίες του προσώπου</p>
@@ -1358,7 +1368,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/biblionetClient/Client.php"><a href="files/src-biblionetclient-client.html"><abbr title="src/biblionetClient/Client.php">Client.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">580</span>
+    <span class="phpdocumentor-element-found-in__line">581</span>
 </aside>
 
         <p class="phpdocumentor-summary">Διορθώνει πληροφορίες του τίτλου</p>
@@ -1402,7 +1412,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/biblionetClient/Client.php"><a href="files/src-biblionetclient-client.html"><abbr title="src/biblionetClient/Client.php">Client.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">461</span>
+    <span class="phpdocumentor-element-found-in__line">463</span>
 </aside>
 
         <p class="phpdocumentor-summary">Τραβάει διαδοχικά τις εταιρείες που ανανεώθηκαν σε όλες τις ημερομηνίες
@@ -1455,7 +1465,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/biblionetClient/Client.php"><a href="files/src-biblionetclient-client.html"><abbr title="src/biblionetClient/Client.php">Client.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">388</span>
+    <span class="phpdocumentor-element-found-in__line">390</span>
 </aside>
 
         <p class="phpdocumentor-summary">Τραβάει διαδοχικά τα πρόσωπα που ανανεώθηκαν σε όλες τις ημερομηνίες
@@ -1561,7 +1571,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/biblionetClient/Client.php"><a href="files/src-biblionetclient-client.html"><abbr title="src/biblionetClient/Client.php">Client.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">671</span>
+    <span class="phpdocumentor-element-found-in__line">672</span>
 </aside>
 
         <p class="phpdocumentor-summary">Check if an external url exists or returns any kind of error</p>
