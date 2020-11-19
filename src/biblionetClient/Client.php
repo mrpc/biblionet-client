@@ -421,15 +421,17 @@ class Client
      * @param bool $untilNow Αν γίνει true, η method επιστρέφει όλες τις 
      *                       ημερομηνίες από τημ $date ως σήμερα.
      *                       Για λόγους απόδοσης, έχει όριο στις 30 μέρες
+     * @param int  $daysLimit Αν θέλουμε να κάνουμε override το όριο των 30 
+     *                       ημερών, χρησιμοποιούμε αυτή την παράμετρο
      * @return object[] An array of persons or null if no results
      */
-    public function getUpdatedPersons($date, $untilNow = false)
+    public function getUpdatedPersons($date, $untilNow = false, $daysLimit = 30)
     {
         if (is_numeric($date)) {
             $date = date('Y-m-d', $date);
         }
         if ($untilNow === true) {
-            return $this->getUpdatedPersonsUntilNow($date);
+            return $this->getUpdatedPersonsUntilNow($date, $daysLimit);
         }
         try {
             $data = $this->callAPI(
@@ -494,15 +496,18 @@ class Client
      * @param bool $untilNow Αν γίνει true, η method επιστρέφει όλες τις 
      *                       ημερομηνίες από τημ $date ως σήμερα.
      *                       Για λόγους απόδοσης, έχει όριο στις 30 μέρες
+     * @param int  $daysLimit Αν θέλουμε να κάνουμε override το όριο των 30 
+     *                       ημερών, χρησιμοποιούμε αυτή την παράμετρο
      * @return object[] An array of companies or null if no results
      */
-    public function getUpdatedCompanies($date, $untilNow = false)
+    public function getUpdatedCompanies($date, $untilNow = false, 
+        $daysLimit = 30)
     {
         if (is_numeric($date)) {
             $date = date('Y-m-d', $date);
         }
         if ($untilNow === true) {
-            return $this->getUpdatedCompaniesUntilNow($date);
+            return $this->getUpdatedCompaniesUntilNow($date, $daysLimit);
         }
         try {
             $data = $this->callAPI(
