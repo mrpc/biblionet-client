@@ -9,7 +9,7 @@ class Client
      * @var string
      */
     protected $apiUrl
-        = 'https://biblionet.diadrasis.net/wp-json/biblionetwebservice/';
+        = 'https://biblionet.gr/wp-json/biblionetwebservice/';
     /**
      * το όνομα χρήστη του συνδρομητή στην ιστοσελίδα της βιβλιονετ
      * @var string
